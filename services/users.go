@@ -10,6 +10,7 @@ import (
 type Users interface {
 	ReadAllUsers() ([]*models.User, error)
 	CreateUser(user *models.User) (*models.User, error)
+	UpdateUser(user *models.User) (*models.User, error)
 }
 
 func NewUsers() Users {
@@ -33,7 +34,6 @@ func (n *userService) ReadAllUsers() ([]*models.User, error) {
 
 func (n *userService) CreateUser(user *models.User) (*models.User, error) {
 	query := "select * from users where email = ?"
-	// var cUser *models.User
 	stmt := n.db.QueryRow(query, user.Email)
 	var hasFound bool
 	switch err := stmt.Scan(&user.Id, &user.Name, &user.Email, &user.Image, &user.TotalCoins, &user.PremiumType, &user.HasPremium, &user.LastDate, &user.Password, &user.RememberToken, &user.CreatedAt, &user.UpdatedAt); err {
@@ -70,4 +70,8 @@ func (n *userService) CreateUser(user *models.User) (*models.User, error) {
 
 type userService struct {
 	db *sql.DB
+}
+
+func (n *userService) UpdateUser(user *models.User) (*models.User, error) {
+	return user, nil
 }

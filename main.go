@@ -29,6 +29,7 @@ func main() {
 	})
 
 	controllers.NewUsers(router.Group("/users"))
+	controllers.NewCampaign(router.Group("/campaigns"))
 
 	port, flag := os.LookupEnv("PORT")
 	if flag {
