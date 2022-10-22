@@ -30,6 +30,8 @@ func main() {
 
 	controllers.NewUsers(router.Group("/users"))
 	controllers.NewCampaign(router.Group("/campaigns"))
+	controllers.NewPartripants(router.Group("/participants"))
+	controllers.NewTransactions(router.Group("/iap"))
 
 	port, flag := os.LookupEnv("PORT")
 	if flag {

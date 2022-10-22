@@ -9,6 +9,7 @@ import (
 
 type Users interface {
 	ReadAllUsers() ([]*models.User, error)
+	ReadOneUser(id int) (*models.User, error)
 	CreateUser(user *models.User) (*models.User, error)
 	UpdateUser(user *models.User) (*models.User, error)
 }
@@ -32,6 +33,19 @@ func (n *userService) ReadAllUsers() ([]*models.User, error) {
 	return users, nil
 }
 
+func (n *userService) ReadOneUser(id int) (*models.User, error) {
+	result, err := n.db.Query("select * from users where id = ?", id)
+	if err != nil {
+		return nil, err
+	}
+	defer result.Close()
+	row := models.User{}
+	for result.Next() {
+		result.Scan(&row.Id, &row.Name, &row.Email, &row.Image, &row.TotalCoins, &row.PremiumType, &row.HasPremium, &row.LastDate, &row.Password, &row.RememberToken, &row.CreatedAt, &row.UpdatedAt)
+	}
+	return &row, nil
+}
+
 func (n *userService) CreateUser(user *models.User) (*models.User, error) {
 	query := "select * from users where email = ?"
 	stmt := n.db.QueryRow(query, user.Email)
@@ -45,7 +59,7 @@ func (n *userService) CreateUser(user *models.User) (*models.User, error) {
 		return nil, err
 	}
 	if !hasFound {
-		sql := "INSERT INTO users(name, email, image, total_coins, has_premium) VALUES(?,?,?,?,?)"
+		sql := "INSERT INTO users(name, email, image, total_coins, has_premium, created_at, updated_at) VALUES(?,?,?,?,?,?,?)"
 		insert, err := n.db.Prepare(sql)
 		if err != nil {
 			return nil, err
@@ -54,7 +68,7 @@ func (n *userService) CreateUser(user *models.User) (*models.User, error) {
 		user.HasPremium = helpers.GetBoolPointer(false)
 		user.CreatedAt = time.Now()
 		user.UpdatedAt = time.Now()
-		response, err := insert.Exec(user.Name, user.Email, user.Image, user.TotalCoins, user.HasPremium)
+		response, err := insert.Exec(user.Name, user.Email, user.Image, user.TotalCoins, user.HasPremium, user.CreatedAt, user.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}
@@ -73,5 +87,23 @@ type userService struct {
 }
 
 func (n *userService) UpdateUser(user *models.User) (*models.User, error) {
+	sql := "UPDATE users SET total_coins = ?, premium_type = ?, has_premium=?, last_date=?, updated_at=? WHERE id = ?"
+	insert, err := n.db.Prepare(sql)
+	if err != nil {
+		return nil, err
+	}
+	user.UpdatedAt = time.Now()
+	response, err := insert.Exec(user.TotalCoins, user.PremiumType, user.HasPremium, user.LastDate, user.UpdatedAt, user.Id)
+	if err != nil {
+		return nil, err
+	}
+	no, err := response.RowsAffected()
+	if err != nil {
+		return nil, err
+	}
+	if no < 1 {
+		return nil, err
+	}
+	defer insert.Close()
 	return user, nil
 }

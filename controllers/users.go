@@ -4,6 +4,7 @@ import (
 	"backend/models"
 	"backend/services"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,13 +12,9 @@ import (
 func NewUsers(group *gin.RouterGroup) {
 	c := usersController{service: services.NewUsers()}
 	group.GET("", c.get)
+	group.GET("/:id", c.getOne)
 	group.POST("", c.post)
-
-	// group.GET("/:id", c.getOne)
-
-	// group.PUT("", c.put)
-	group.PATCH("", c.patch)
-	// group.DELETE("/:id", c.delete)
+	group.PUT("", c.put)
 }
 
 type usersController struct {
@@ -26,6 +23,21 @@ type usersController struct {
 
 func (u *usersController) get(c *gin.Context) {
 	user, err := u.service.ReadAllUsers()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
+func (u *usersController) getOne(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusNotAcceptable, gin.H{"error": err.Error()})
+		return
+	}
+	user, err := u.service.ReadOneUser(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -50,7 +62,7 @@ func (u *usersController) post(c *gin.Context) {
 	c.JSON(http.StatusCreated, result)
 }
 
-func (u *usersController) patch(c *gin.Context) {
+func (u *usersController) put(c *gin.Context) {
 	user := &models.User{}
 
 	err := c.ShouldBindJSON(user)
