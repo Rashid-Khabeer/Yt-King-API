@@ -81,7 +81,7 @@ func (s *transactionsService) HandleRevenueCatWebhooks(notificationData []byte) 
 		defer result.Close()
 		user := models.User{}
 		if result.Next() {
-			result.Scan(&user.Id, &user.Name, &user.Email, &user.Image, &user.TotalCoins, &user.PremiumType, &user.HasPremium, &user.LastDate, &user.Password, &user.RememberToken, &user.CreatedAt, &user.UpdatedAt)
+			result.Scan(&user.Id, &user.Name, &user.Email, &user.Image, &user.TotalCoins, &user.PremiumType, &user.HasPremium, &user.LastDate, &user.Password, &user.RememberToken, &user.CreatedAt, &user.UpdatedAt, &user.AppVersion, &user.IsBlocked, &user.BlockedDays)
 		}
 		coins := 0
 		premiumType := ""

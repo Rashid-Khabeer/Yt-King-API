@@ -165,7 +165,7 @@ func (n *campaignService) FetchCampaigns(campaignType string, user int, count in
 		defer uResult.Close()
 		for uResult.Next() {
 			row := models.User{}
-			uResult.Scan(&row.Id, &row.Name, &row.Email, &row.Image, &row.TotalCoins, &row.PremiumType, &row.HasPremium, &row.LastDate, &row.Password, &row.RememberToken, &row.CreatedAt, &row.UpdatedAt)
+			uResult.Scan(&row.Id, &row.Name, &row.Email, &row.Image, &row.TotalCoins, &row.PremiumType, &row.HasPremium, &row.LastDate, &row.Password, &row.RememberToken, &row.CreatedAt, &row.UpdatedAt, &row.AppVersion, &row.IsBlocked, &row.BlockedDays)
 			if *row.HasPremium == true {
 				prCampaigns = append(prCampaigns, camp)
 			} else {
@@ -201,7 +201,7 @@ func (n *campaignService) FetchOwnCampaigns(user int) ([]*models.Campaign, error
 			defer userResult.Close()
 			if userResult.Next() {
 				userRow := models.User{}
-				userResult.Scan(&userRow.Id, &userRow.Name, &userRow.Email, &userRow.Image, &userRow.TotalCoins, &userRow.PremiumType, &userRow.HasPremium, &userRow.LastDate, &userRow.Password, &userRow.RememberToken, &userRow.CreatedAt, &userRow.UpdatedAt)
+				userResult.Scan(&userRow.Id, &userRow.Name, &userRow.Email, &userRow.Image, &userRow.TotalCoins, &userRow.PremiumType, &userRow.HasPremium, &userRow.LastDate, &userRow.Password, &userRow.RememberToken, &userRow.CreatedAt, &userRow.UpdatedAt, &userRow.AppVersion, &userRow.IsBlocked, &userRow.BlockedDays)
 				participant.Id = row1.Id
 				participant.CampaignId = row1.CampaignId
 				participant.UserId = &userRow

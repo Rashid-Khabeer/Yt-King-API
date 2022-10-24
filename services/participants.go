@@ -4,6 +4,7 @@ import (
 	"backend/helpers"
 	"backend/models"
 	"database/sql"
+	"strconv"
 	"time"
 )
 
@@ -69,7 +70,8 @@ func (pS *participantsService) AddParticipant(participant *models.Participants) 
 				if n < 1 {
 					return 0, err
 				}
-				pS.notificationService.SendNotificationToTopic("Congratulations", "Your campaign has been completed", string(campaignOwner))
+				topic := strconv.Itoa(campaignOwner)
+				pS.notificationService.SendNotificationToTopic("Congratulations", "Your campaign has been completed", topic)
 			}
 		}
 	}

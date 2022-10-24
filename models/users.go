@@ -15,5 +15,8 @@ type User struct {
 	LastDate      *string `bson:"last_date" json:"last_date,omitempty"`
 	RememberToken *string `bson:"remember_token" json:"remember_token,omitempty"`
 	Password      *string `bson:"password" json:"password,omitempty"`
+	AppVersion    *int    `bson:"app_version" json:"app_version,omitempty"`
+	IsBlocked     *bool   `bson:"is_blocked" json:"is_blocked,omitempty"`
+	BlockedDays   *int    `bson:"blocked_days" json:"blocked_days,omitempty"`
 	base2.Timestamped
 }
