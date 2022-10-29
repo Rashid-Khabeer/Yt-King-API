@@ -11,7 +11,7 @@ var db *sql.DB
 
 func InitiateMySql() {
 	// instance, err := sql.Open("mysql", "root:@tcp(localhost:3306)/subsubbo_ytboost?parseTime=true")
-	instance, err := sql.Open("mysql", "rashid_yt2:Subsubpass1234$#@!@tcp(198.211.97.172:3306)/subsubbo_ytboost?parseTime=true")
+	instance, err := sql.Open("mysql", "rashid_yt:Subsubpass1234$#@!@tcp(localhost:3306)/subsubbo_ytboost?parseTime=true")
 	if err != nil {
 		panic(err)
 	}
