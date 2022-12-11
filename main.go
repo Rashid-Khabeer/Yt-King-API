@@ -16,6 +16,7 @@ func main() {
 	helpers.InitiateMySql()
 	defer helpers.GetDB().Close()
 	router := gin.Default()
+	router.StaticFile("/app-ads.txt", "./assets/app-ads.txt")
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"*"},

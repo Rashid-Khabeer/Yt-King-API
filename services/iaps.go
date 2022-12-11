@@ -20,7 +20,7 @@ func NewTransactions() Iap {
 }
 
 func (n *transactionsService) ReadAllTransactions() ([]*models.Transactions, error) {
-	// n.notificationService.SendNotificationToTopic("YT", "Hello Youtubers", "25")
+	// n.notificationService.SendNotificationToTopic("YT", "Hello Youtubers", "260")
 	result, err := n.db.Query("select * from transactions")
 	if err != nil {
 		return make([]*models.Transactions, 0), err
