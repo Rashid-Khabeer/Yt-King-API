@@ -26,7 +26,7 @@ func main() {
 	}))
 
 	router.GET("/", func(c *gin.Context) {
-		c.String(200, "YT KING SERVER")
+		c.String(200, "Welcome to Parenthises")
 	})
 
 	controllers.NewUsers(router.Group("/users"))
