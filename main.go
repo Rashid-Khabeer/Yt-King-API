@@ -17,6 +17,7 @@ func main() {
 	defer helpers.GetDB().Close()
 	router := gin.Default()
 	router.StaticFile("/app-ads.txt", "./assets/app-ads.txt")
+	router.StaticFile("/privacy-policy", "./assets/privacy-policy.html")
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"*"},
