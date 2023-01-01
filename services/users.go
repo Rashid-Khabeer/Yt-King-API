@@ -64,7 +64,7 @@ func (n *userService) CreateUser(user *models.User) (*models.User, error) {
 		if err != nil {
 			return nil, err
 		}
-		user.TotalCoins = helpers.GetIntPointer(0)
+		user.TotalCoins = helpers.GetIntPointer(200)
 		user.HasPremium = helpers.GetBoolPointer(false)
 		user.CreatedAt = time.Now()
 		user.UpdatedAt = time.Now()
