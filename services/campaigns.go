@@ -191,14 +191,19 @@ func (n *campaignService) FetchOwnCampaigns(user int) ([]*models.Campaign, error
 		row := models.Campaign{}
 		result.Scan(&row.Id, &row.UserId, &row.CampaignType, &row.ChannelUrl, &row.IsStateBusy, &row.IsCompleted, &row.IsCompleted, &row.PlayerId, &row.RequiredCount, &row.RequiredTime, &row.VideoUrl, &row.CreatedAt, &row.UpdatedAt)
 		var participants []*models.PopulatedParticipants
-		parResult, _ := n.db.Query("select * from participants where campaign_id = ?", row.Id)
+		parResult, err := n.db.Query("select * from participants where campaign_id = ?", row.Id)
+		if err != nil {
+			return make([]*models.Campaign, 0), err
+		}
 		defer parResult.Close()
 		for parResult.Next() {
 			row1 := models.Participants{}
 			participant := models.PopulatedParticipants{}
 			parResult.Scan(&row1.Id, &row1.CampaignId, &row1.UserId, &row1.CreatedAt, &row1.UpdatedAt)
-			userResult, _ := n.db.Query("select * from users where id =?", row1.UserId)
-			defer userResult.Close()
+			userResult, err := n.db.Query("select * from users where id =?", row1.UserId)
+			if err != nil {
+				return make([]*models.Campaign, 0), err
+			}
 			if userResult.Next() {
 				userRow := models.User{}
 				userResult.Scan(&userRow.Id, &userRow.Name, &userRow.Email, &userRow.Image, &userRow.TotalCoins, &userRow.PremiumType, &userRow.HasPremium, &userRow.LastDate, &userRow.Password, &userRow.RememberToken, &userRow.CreatedAt, &userRow.UpdatedAt, &userRow.AppVersion, &userRow.IsBlocked, &userRow.BlockedDays)
@@ -209,6 +214,7 @@ func (n *campaignService) FetchOwnCampaigns(user int) ([]*models.Campaign, error
 				participant.UpdatedAt = row1.UpdatedAt
 			}
 			participants = append(participants, &participant)
+			userResult.Close()
 		}
 		row.Participants = participants
 		campaigns = append(campaigns, &row)
