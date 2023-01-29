@@ -34,6 +34,7 @@ func main() {
 	controllers.NewCampaign(router.Group("/campaigns"))
 	controllers.NewPartripants(router.Group("/participants"))
 	controllers.NewTransactions(router.Group("/iap"))
+	controllers.NewFeedback(router.Group("/feedback"))
 
 	port, flag := os.LookupEnv("PORT")
 	if flag {
