@@ -17,7 +17,7 @@ func NewFeedback() Feedback {
 }
 
 func (n *feedbakService) CreateFeedback(feedbak *models.Feedback) (int, error) {
-	sql := "INSERT INTO feedbacks(user_id, type, text, created_at, updated_at) VALUES(?,?,?,?,?)"
+	sql := "INSERT INTO feedbacks(user_id, type, text, createdAt, updatedAt) VALUES(?,?,?,?,?)"
 	insert, err := n.db.Prepare(sql)
 	if err != nil {
 		return 0, err
